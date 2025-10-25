@@ -1,13 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from '@/Component/Navbar';
 import Footer from '@/Component/Footer';
+import { useDispatch, useSelector } from 'react-redux';
+import { login, signup, clearError } from '@/Redux/UserSlice';
+import { syncCartWithUser } from '@/Redux/CartSlice';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 export default function LoginPage() {
     const [formData, setFormData] = useState({
         email: '',
-        password: ''
+        password: '',
+        name: ''
     });
     const [isLogin, setIsLogin] = useState(true);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const { loading, error, isAuthenticated } = useSelector(state => state.user);
+
+    // Clear any existing errors when component mounts or form type changes
+    useEffect(() => {
+        dispatch(clearError());
+    }, [dispatch, isLogin]);
+
+    // Redirect if already authenticated
+    useEffect(() => {
+        if (isAuthenticated) {
+            navigate('/');
+        }
+    }, [isAuthenticated, navigate]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -15,12 +36,74 @@ export default function LoginPage() {
             ...prev,
             [name]: value
         }));
+        
+        // Clear error when user starts typing
+        if (error) {
+            dispatch(clearError());
+        }
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        alert(isLogin ? 'Login successful!' : 'Registration successful!');
-        // Add your authentication logic here
+
+        // Clear any existing errors
+        dispatch(clearError());
+
+        // Basic validation
+        if (!formData.email || !formData.password || (!isLogin && !formData.name)) {
+            const missingField = !formData.email 
+                ? 'Email' 
+                : !formData.password 
+                    ? 'Password' 
+                    : 'Full name';
+            toast.error(`${missingField} is required`);
+            return;
+        }
+
+        // Email format validation
+        if (!/\S+@\S+\.\S+/.test(formData.email)) {
+            toast.error('Please enter a valid email address');
+            return;
+        }
+
+        // Password length validation
+        if (formData.password.length < 6) {
+            toast.error('Password must be at least 6 characters long');
+            return;
+        }
+
+        try {
+            let result;
+            
+            if (isLogin) {
+                result = await dispatch(login({ 
+                    email: formData.email.trim(), 
+                    password: formData.password 
+                })).unwrap();
+                
+                // Sync cart with logged in user
+                dispatch(syncCartWithUser({ userId: result.id }));
+                
+                toast.success('Successfully logged in!');
+                navigate('/');
+                
+            } else {
+                result = await dispatch(signup({
+                    email: formData.email.trim(),
+                    password: formData.password,
+                    name: formData.name.trim()
+                })).unwrap();
+                
+                // Initialize empty cart for new user
+                dispatch(syncCartWithUser({ userId: result.id }));
+                
+                toast.success('Account created successfully!');
+                navigate('/');
+            }
+        } catch (error) {
+            // Error is already handled by the rejected case in the slice
+            toast.error(error || 'An unexpected error occurred. Please try again.');
+        }
     };
 
     return (
@@ -47,6 +130,8 @@ export default function LoginPage() {
                                     type="text"
                                     id="name"
                                     name="name"
+                                    value={formData.name}
+                                    onChange={handleInputChange}
                                     required={!isLogin}
                                     className="mt-1 block w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-black focus:ring-black"
                                     placeholder="John Doe"
@@ -89,8 +174,11 @@ export default function LoginPage() {
                         <button
                             type="submit"
                             className="w-full bg-black text-white py-3 rounded-lg hover:bg-gray-800 transition-colors"
+                            disabled={loading}
                         >
-                            {isLogin ? 'Sign In' : 'Create Account'}
+                            <span className="text-white">
+                                {loading ? 'Please wait...' : (isLogin ? 'Sign In' : 'Create Account')}
+                            </span>
                         </button>
                     </form>
 
@@ -104,6 +192,8 @@ export default function LoginPage() {
                                 : "Already have an account? Sign in"}
                         </button>
                     </div>
+
+
                 </div>
             </div>
             <Footer />

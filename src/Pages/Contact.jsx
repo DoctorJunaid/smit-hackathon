@@ -45,14 +45,14 @@ export default function ContactPage() {
                                         <Phone className="w-6 h-6 text-gray-600" />
                                         <div>
                                             <h3 className="font-medium">Phone</h3>
-                                            <p className="text-gray-600">+1 (555) 123-4567</p>
+                                            <p className="text-gray-600">03164593159</p>
                                         </div>
                                     </div>
                                     <div className="flex items-start gap-4">
                                         <Mail className="w-6 h-6 text-gray-600" />
                                         <div>
                                             <h3 className="font-medium">Email</h3>
-                                            <p className="text-gray-600">support@mymart.com</p>
+                                            <p className="text-gray-600">junaid.aurangeb1@gmail.com</p>
                                         </div>
                                     </div>
                                     <div className="flex items-start gap-4">
@@ -60,9 +60,9 @@ export default function ContactPage() {
                                         <div>
                                             <h3 className="font-medium">Address</h3>
                                             <p className="text-gray-600">
-                                                123 Commerce Street<br />
-                                                City, State 12345<br />
-                                                United States
+                                                Peshawar<br />
+                                                Khyber Pakhtunkhwa<br />
+                                                Pakistan
                                             </p>
                                         </div>
                                     </div>
@@ -159,6 +159,25 @@ export default function ContactPage() {
                                     Send Message
                                 </button>
                             </form>
+                        </div>
+                    </div>
+
+                    {/* Google Maps Section */}
+                    <div className="mt-12">
+                        <div className="bg-white rounded-2xl shadow-lg p-8">
+                            <h2 className="text-2xl font-semibold mb-6">Find Us on Map</h2>
+                            <div className="w-full h-96 rounded-lg overflow-hidden">
+                                <iframe
+                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d212270.5667814511!2d71.35245!3d34.0151!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38d917b8146c0dc5%3A0x3e4b8c9b6b8b8b8b!2sPeshawar%2C%20Khyber%20Pakhtunkhwa%2C%20Pakistan!5e0!3m2!1sen!2s!4v1635789012345!5m2!1sen!2s"
+                                    width="100%"
+                                    height="100%"
+                                    style={{ border: 0 }}
+                                    allowFullScreen=""
+                                    loading="lazy"
+                                    referrerPolicy="no-referrer-when-downgrade"
+                                    title="Peshawar Location"
+                                ></iframe>
+                            </div>
                         </div>
                     </div>
                 </div>
