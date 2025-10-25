@@ -45,10 +45,10 @@ export default function Navbar() {
 
                     {/* Desktop Nav Links */}
                     <div className="hidden items-center gap-6 lg:flex">
+                        <StyledNavLink to="/">Home</StyledNavLink>
                         <StyledNavLink to="/shop">Shop</StyledNavLink>
-                        <StyledNavLink to="/men">Men</StyledNavLink>
-                        <StyledNavLink to="/women">Women</StyledNavLink>
-                        <StyledNavLink to="/trending">Trending</StyledNavLink>
+                        <StyledNavLink to="/about">About</StyledNavLink>
+                        <StyledNavLink to="/contact">Contact</StyledNavLink>
                     </div>
                 </div>
 
@@ -104,10 +104,10 @@ export default function Navbar() {
 
                 {/* Mobile Menu Links */}
                 <div className="mt-8 flex flex-col items-center gap-8 p-8">
+                    <StyledNavLink to="/" onClick={closeMenu}>Home</StyledNavLink>
                     <StyledNavLink to="/shop" onClick={closeMenu}>Shop</StyledNavLink>
-                    <StyledNavLink to="/men" onClick={closeMenu}>Men</StyledNavLink>
-                    <StyledNavLink to="/women" onClick={closeMenu}>Women</StyledNavLink>
-                    <StyledNavLink to="/trending" onClick={closeMenu}>Trending</StyledNavLink>
+                    <StyledNavLink to="/about" onClick={closeMenu}>About</StyledNavLink>
+                    <StyledNavLink to="/contact" onClick={closeMenu}>Contact</StyledNavLink>
 
 
                     <div className="mt-8 w-full border-t border-slate-300 pt-8 text-white   ">
