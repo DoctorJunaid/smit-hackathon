@@ -146,27 +146,27 @@ export default function ShopPage() {
         const style = document.createElement('style');
         style.innerHTML = `
             /* User preferred main color */
-            .bg-accent-color { background-color: #FD3B3B; }
-            .text-accent-color { color: #FD3B3B; }
-            .border-accent-color { border-color: #FD3B3B; }
-            .accent-color { accent-color: #FD3B3B; }
+            .bg-accent-color { background-color: #000000; }
+            .text-accent-color { color: #000000; }
+            .border-accent-color { border-color: #000000; }
+            .accent-color { accent-color: #000000; }
             
             /* Interactive button styles with color change animation */
             .btn-accent {
-                background-color: #FD3B3B;
+                background-color: #000000;
                 transition: background-color 0.3s ease, transform 0.2s ease;
             }
             .btn-accent:hover {
-                background-color: #e02d2d;
+                background-color: #333333;
                 transform: scale(1.03);
             }
             .btn-accent-outline {
-                border: 2px solid #FD3B3B;
-                color: #FD3B3B;
+                border: 2px solid #000000;
+                color: #000000;
                 transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
             }
             .btn-accent-outline:hover {
-                background-color: #FD3B3B;
+                background-color: #000000;
                 color: white;
                 transform: scale(1.03);
             }
@@ -183,7 +183,7 @@ export default function ShopPage() {
                 left: 0;
                 width: 0;
                 height: 2px;
-                background-color: #FD3B3B;
+                background-color: #000000;
                 transition: width 0.3s ease;
             }
             .category-btn:hover::after {

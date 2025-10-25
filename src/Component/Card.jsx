@@ -148,7 +148,7 @@ export default function ProductCard({
                     <button
                         onClick={handleFavoriteClick}
                         className={`p-1.5 rounded-full transition-colors duration-200 ${
-                            isFavorited ? 'text-red-500' : 'text-gray-600 hover:text-red-500'
+                            isFavorited ? 'text-black' : 'text-gray-600 hover:text-black'
                         }`}
                         aria-label={isFavorited ? 'Remove from favorites' : 'Add to favorites'}
                     >

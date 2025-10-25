@@ -19,8 +19,8 @@ export default function Hero() {
     const badgesRef = useRef([]);
     const backgroundRef = useRef(null);
 
-    // YouTube video ID - Using a known working video for testing
-    const videoId = "dQw4w9WgXcQ"; // Rick Astley - Never Gonna Give You Up (known working video)
+    // YouTube video ID - Using a fashion/lifestyle video for better context
+    const videoId = "M7lc1UVf-VE"; // YouTube Spotlight - Fashion video (known working video)
 
     const images = [
         'https://images.unsplash.com/photo-1544441893-675973e31985?w=1200&h=800&fit=crop', // Main hero image
@@ -192,7 +192,7 @@ export default function Hero() {
                                 {/* Text is z-10 to stay on top */}
                                 <span className="relative z-10 text-white">SHOP NOW</span>
                                 {/* Animation layer is z-0, slides in from left */}
-                                <span className="absolute inset-0 z-0 bg-red-500 transform -translate-x-full transition-transform duration-500 ease-in-out group-hover:translate-x-0"></span>
+                                <span className="absolute inset-0 z-0 bg-black transform -translate-x-full transition-transform duration-500 ease-in-out group-hover:translate-x-0"></span>
                             </Link>
 
                             {/* Secondary Button - Link to About */}
@@ -241,7 +241,7 @@ export default function Hero() {
                             </div>
 
                             {/* Floating Badges */}
-                            <div ref={el => badgesRef.current[0] = el} className="absolute top-6 right-6 bg-red-500 text-white text-sm font-bold px-5 py-2 rounded-full shadow-lg opacity-0">
+                            <div ref={el => badgesRef.current[0] = el} className="absolute top-6 right-6 bg-black text-white text-sm font-bold px-5 py-2 rounded-full shadow-lg opacity-0">
                                 NEW ARRIVALS
                             </div>
 
@@ -254,13 +254,13 @@ export default function Hero() {
             </section>
 
             {/* Second Section - Video & Stats */}
-            <section className="min-h-screen bg-white py-20">
-                <div className="max-w-7xl mx-auto px-4 sm:px-8">
+            <section className="min-h-screen bg-white py-20 flex items-center">
+                <div className="max-w-7xl mx-auto px-4 sm:px-8 w-full">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 
                         {/* Video Section */}
-                        <div className="order-2 lg:order-1">
-                            <div className="bg-gray-900 rounded-3xl overflow-hidden shadow-2xl">
+                        <div className="order-2 lg:order-1 flex justify-center">
+                            <div className="bg-gray-900 rounded-3xl overflow-hidden shadow-2xl w-full max-w-md">
                                 <div className="aspect-[4/5] bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center relative overflow-hidden group">
                                     {/* Subtle decorative gradient on hover */}
                                     <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-pink-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
@@ -271,10 +271,12 @@ export default function Hero() {
                                     {/* Play Button */}
                                     <button
                                         onClick={handleVideoPlay}
-                                        className="relative w-24 h-24 bg-white rounded-full flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:shadow-2xl z-10 hover:bg-gray-50"
+                                        className="relative w-20 h-20 bg-white rounded-full flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:shadow-2xl z-10 hover:bg-gray-50 shadow-lg"
                                         aria-label="Play video"
                                     >
-                                        <div className="w-0 h-0 border-t-12 border-t-transparent border-l-18 border-l-black border-b-12 border-b-transparent ml-1"></div>
+                                        <svg className="w-8 h-8 text-black ml-1" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M8 5v14l11-7z"/>
+                                        </svg>
                                     </button>
 
                                     {/* Hover border effect */}

@@ -14,8 +14,8 @@ export default function VideoPlayerModal({ isOpen, onClose, videoId, title = "Vi
     const controlsRef = useRef(null);
     const controlsTimeoutRef = useRef(null);
 
-    // YouTube embed URL - simplified for better compatibility
-    const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0&controls=1&modestbranding=1&rel=0&showinfo=0`;
+    // YouTube embed URL - optimized for better compatibility and autoplay
+    const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&controls=1&modestbranding=1&rel=0&showinfo=0&enablejsapi=1&origin=${window.location.origin}`;
     
     // Debug logging
     console.log('VideoPlayerModal - isOpen:', isOpen, 'videoId:', videoId, 'embedUrl:', embedUrl);
@@ -101,7 +101,7 @@ export default function VideoPlayerModal({ isOpen, onClose, videoId, title = "Vi
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             {/* Backdrop */}
             <div 
                 className="absolute inset-0 bg-black/90 backdrop-blur-sm"
@@ -111,34 +111,34 @@ export default function VideoPlayerModal({ isOpen, onClose, videoId, title = "Vi
             {/* Modal */}
             <div 
                 ref={modalRef}
-                className="relative w-full max-w-6xl mx-4 opacity-0 transform scale-90 transition-all duration-300"
+                className="relative w-full max-w-4xl mx-auto opacity-0 transform scale-90 transition-all duration-300"
             >
-                {/* Close Button */}
+                {/* Close Button - Moved inside and more visible */}
                 <button
                     onClick={handleClose}
-                    className="absolute -top-12 right-0 z-10 p-3 text-white hover:text-gray-300 transition-all duration-200 hover:scale-110 bg-black/20 rounded-full backdrop-blur-sm"
+                    className="absolute top-4 right-4 z-30 p-2 text-white hover:text-red-400 transition-all duration-200 hover:scale-110 bg-black/60 rounded-full backdrop-blur-sm border border-white/20"
                     aria-label="Close video"
                 >
-                    <X size={20} />
+                    <X size={24} />
                 </button>
 
                 {/* Video Player Container */}
                 <div 
                     ref={playerRef}
-                    className="relative bg-black rounded-lg overflow-hidden shadow-2xl opacity-0 transform translate-y-8 transition-all duration-500"
+                    className="relative bg-black rounded-lg overflow-hidden shadow-2xl opacity-0 transform translate-y-8 transition-all duration-500 mx-auto"
                     onMouseMove={handleMouseMove}
                     onMouseLeave={handleMouseLeave}
                 >
                     {/* Video Title */}
                     <div className={`absolute top-0 left-0 right-0 z-20 bg-gradient-to-b from-black/70 to-transparent p-6 transition-opacity duration-300 ${showControls ? 'opacity-100' : 'opacity-0'}`}>
-                        <h3 className="text-white text-xl font-medium">{title}</h3>
+                        <h3 className="text-white text-xl font-medium pr-16">{title}</h3>
                     </div>
 
                     {/* YouTube Iframe */}
-                    <div className="relative aspect-video">
+                    <div className="relative aspect-video w-full">
                         <iframe
                             src={embedUrl}
-                            className="w-full h-full"
+                            className="w-full h-full rounded-lg"
                             style={{ border: 'none' }}
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                             allowFullScreen
