@@ -70,7 +70,6 @@ pauseOnFocusLoss
 draggable
 pauseOnHover
 theme="colored"
-transition={Bounce}
 />
     </div>
   );
