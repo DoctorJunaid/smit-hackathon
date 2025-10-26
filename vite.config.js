@@ -7,7 +7,14 @@ import path from 'path'
 export default defineConfig({
     plugins: [react(),
         tailwindcss()],
-
+    build: {
+        sourcemap: true,
+        rollupOptions: {
+            output: {
+                sourcemapExcludeSources: false
+            }
+        }
+    },
     resolve: {
         alias: {
             '@': path.resolve(__dirname, './src'),
@@ -15,6 +22,5 @@ export default defineConfig({
     },
     server: {
         historyApiFallback: true,
-
     },
 })

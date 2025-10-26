@@ -8,15 +8,38 @@ import { Provider } from "react-redux";
 import store from "@/app/store";
 import { initOnDOMReady } from '@/utils/initAnimations';
 
-// Initialize animations
-initOnDOMReady();
+// Function to check if stylesheets are loaded
+const areStylesheetsLoaded = () => {
+  const styleSheets = document.styleSheets;
+  return Array.from(styleSheets).every(sheet => {
+    try {
+      return sheet.cssRules || sheet.rules;
+    } catch (e) {
+      return false;
+    }
+  });
+};
 
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <BrowserRouter>
+// Wait for stylesheets and DOM to be ready
+const renderApp = () => {
+  if (!areStylesheetsLoaded()) {
+    requestAnimationFrame(renderApp);
+    return;
+  }
+
+  // Initialize animations
+  initOnDOMReady();
+
+  createRoot(document.getElementById('root')).render(
+    <StrictMode>
+      <BrowserRouter>
         <Provider store={store}>
-    <App />
+          <App />
         </Provider>
-    </BrowserRouter>
-  </StrictMode>,
-)
+      </BrowserRouter>
+    </StrictMode>
+  );
+};
+
+// Start the render process
+renderApp();
