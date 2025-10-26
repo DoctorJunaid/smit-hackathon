@@ -659,3 +659,131 @@ html {
     transition-duration: 0.01ms !important;
   }
 }
+.Toastify__toast-container {
+  position: fixed !important;
+  top: 1rem !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  z-index: 99999 !important;
+  width: auto !important;
+  max-width: 90vw !important;
+  pointer-events: none !important;
+}
+
+.Toastify__toast-container--top-center {
+  top: 1rem !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+}
+
+.Toastify__toast {
+  pointer-events: auto !important;
+  margin-bottom: 1rem !important;
+  border-radius: 0.5rem !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
+  min-height: 64px !important;
+  backdrop-filter: blur(10px) !important;
+  transform: none !important;
+}
+
+.Toastify__toast--default {
+  background: rgba(255, 255, 255, 0.98) !important;
+  color: #1f2937 !important;
+}
+
+.Toastify__toast--success {
+  background: rgba(16, 185, 129, 0.95) !important;
+  color: white !important;
+}
+
+.Toastify__toast--error {
+  background: rgba(239, 68, 68, 0.95) !important;
+  color: white !important;
+}
+
+.Toastify__toast--info {
+  background: rgba(59, 130, 246, 0.95) !important;
+  color: white !important;
+}
+
+.Toastify__toast--warning {
+  background: rgba(245, 158, 11, 0.95) !important;
+  color: white !important;
+}
+
+/* Ensure toast body has proper styling */
+.Toastify__toast-body {
+  padding: 0.5rem !important;
+  line-height: 1.5 !important;
+}
+
+/* Progress bar styling */
+.Toastify__progress-bar {
+  height: 3px !important;
+}
+
+/* Close button styling */
+.Toastify__close-button {
+  opacity: 0.7 !important;
+}
+
+.Toastify__close-button:hover {
+  opacity: 1 !important;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 640px) {
+  .Toastify__toast-container {
+    padding: 0.5rem !important;
+    max-width: calc(100vw - 1rem) !important;
+  }
+  
+  .Toastify__toast {
+    margin-bottom: 0.5rem !important;
+    border-radius: 0.5rem !important;
+  }
+}
+
+/* Ensure toast appears above all other elements including modals */
+@layer utilities {
+  .toast-overlay-fix {
+    position: fixed !important;
+    z-index: 99999 !important;
+  }
+}
+
+/* Animation improvements */
+@keyframes toastSlideIn {
+  from {
+    transform: translate3d(-50%, -100%, 0);
+    opacity: 0;
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+    opacity: 1;
+  }
+}
+
+@keyframes toastSlideOut {
+  from {
+    transform: translate3d(-50%, 0, 0);
+    opacity: 1;
+  }
+  to {
+    transform: translate3d(-50%, -100%, 0);
+    opacity: 0;
+  }
+}
+
+.Toastify__toast--top-center {
+  animation: toastSlideIn 0.3s ease-out !important;
+}
+
+/* Fix for transform conflicts */
+.Toastify__toast-container * {
+  transform: none !important;
+}
+
+.Toastify__toast-container {
+  transform: translateX(-50%) !important;
+}
