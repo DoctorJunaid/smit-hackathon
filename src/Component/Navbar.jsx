@@ -43,7 +43,7 @@ export default function Navbar() {
     const isAuthenticated = userState.isAuthenticated || false;
     const currentUser = userState.currentUser || null;
 
-    const cartItems = useSelector(state => state.cart?.items || []);
+    const  cartItems = useSelector(state => state.cart?.items || []);
     const userCartItems = cartItems.filter(item => item.userId === currentUser?.id);
     const cartItemCount = userCartItems.reduce((total, item) => total + (item.quantity || 1), 0);
 
