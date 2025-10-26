@@ -4,11 +4,52 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>smit-hackathon</title>
-    <script type="module" crossorigin src="/assets/index-BxwL9qox.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-mK_1xLJk.css">
+    <title>Smit-hackathon</title>
+    
+    <!-- Critical CSS for Toast - Prevents FOUC -->
+    <style>
+      /* Toast container critical styles */
+      .Toastify__toast-container {
+        position: fixed !important;
+        top: 1rem !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        z-index: 99999 !important;
+        pointer-events: none !important;
+        width: auto !important;
+        max-width: 500px !important;
+      }
+      
+      .Toastify__toast {
+        pointer-events: auto !important;
+        transform: none !important;
+        position: relative !important;
+        margin: 0 auto 8px auto !important;
+        background: white !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+        border-radius: 8px !important;
+      }
+
+      /* Prevent layout shift during load */
+      #root {
+        min-height: 100vh;
+      }
+
+      /* Loading state */
+      body:not(.loaded) {
+        overflow: hidden;
+      }
+    </style>
+    <script type="module" crossorigin src="/assets/index-CqxD-tU6.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-Cag_tLrS.css">
   </head>
   <body>
     <div id="root"></div>
+    <script>
+      // Mark body as loaded after full load
+      window.addEventListener('load', () => {
+        document.body.classList.add('loaded');
+      });
+    </script>
   </body>
 </html>

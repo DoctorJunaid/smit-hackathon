@@ -30,29 +30,46 @@ const App = () => {
     }
   }, [dispatch]);
 
-  // Prevent GSAP from affecting toast container
+  // Prevent GSAP and scroll from affecting toast container
   useEffect(() => {
-    const style = document.createElement('style');
-    style.innerHTML = `
-      .Toastify__toast-container {
-        position: fixed !important;
-        top: 1rem !important;
-        left: 50% !important;
-        transform: translateX(-50%) !important;
-        z-index: 99999 !important;
-        pointer-events: none;
-        will-change: auto !important;
+    // Create a MutationObserver to constantly fix toast position
+    const observer = new MutationObserver(() => {
+      const toastContainer = document.querySelector('.Toastify__toast-container');
+      if (toastContainer) {
+        const currentTransform = toastContainer.style.transform;
+        if (currentTransform !== 'translateX(-50%)') {
+          toastContainer.style.transform = 'translateX(-50%)';
+          toastContainer.style.top = '1rem';
+          toastContainer.style.position = 'fixed';
+          toastContainer.style.zIndex = '99999';
+        }
       }
-      .Toastify__toast {
-        pointer-events: auto;
-        transform: none !important;
-        will-change: auto !important;
+    });
+
+    // Start observing
+    observer.observe(document.body, {
+      attributes: true,
+      childList: true,
+      subtree: true,
+      attributeFilter: ['style']
+    });
+
+    // Also fix on scroll
+    const handleScroll = () => {
+      const toastContainer = document.querySelector('.Toastify__toast-container');
+      if (toastContainer) {
+        toastContainer.style.transform = 'translateX(-50%)';
+        toastContainer.style.top = '1rem';
+        toastContainer.style.position = 'fixed';
       }
-    `;
-    document.head.appendChild(style);
-    
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    // Cleanup
     return () => {
-      document.head.removeChild(style);
+      observer.disconnect();
+      window.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
