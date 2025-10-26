@@ -787,3 +787,187 @@ html {
 .Toastify__toast-container {
   transform: translateX(-50%) !important;
 }
+:root {
+  --toastify-z-index: 99999;
+}
+
+/* Critical toast fixes for production */
+.Toastify__toast-container,
+div[class*="Toastify__toast-container"] {
+  position: fixed !important;
+  top: 1rem !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  z-index: 99999 !important;
+  width: auto !important;
+  max-width: 90vw !important;
+  pointer-events: none !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Ensure toast container is always on top */
+.Toastify__toast-container::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Individual toast styling */
+.Toastify__toast,
+div[class*="Toastify__toast"] {
+  pointer-events: auto !important;
+  margin-bottom: 1rem !important;
+  border-radius: 0.5rem !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
+  min-height: 64px !important;
+  backdrop-filter: blur(10px) !important;
+  transform: none !important;
+  position: relative !important;
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Toast types with better visibility */
+.Toastify__toast--default,
+div[class*="Toastify__toast--default"] {
+  background: rgba(255, 255, 255, 0.98) !important;
+  color: #1f2937 !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+.Toastify__toast--success,
+div[class*="Toastify__toast--success"] {
+  background: rgba(16, 185, 129, 0.95) !important;
+  color: white !important;
+  border: 1px solid rgba(16, 185, 129, 1) !important;
+}
+
+.Toastify__toast--error,
+div[class*="Toastify__toast--error"] {
+  background: rgba(239, 68, 68, 0.95) !important;
+  color: white !important;
+  border: 1px solid rgba(239, 68, 68, 1) !important;
+}
+
+.Toastify__toast--info,
+div[class*="Toastify__toast--info"] {
+  background: rgba(59, 130, 246, 0.95) !important;
+  color: white !important;
+  border: 1px solid rgba(59, 130, 246, 1) !important;
+}
+
+.Toastify__toast--warning,
+div[class*="Toastify__toast--warning"] {
+  background: rgba(245, 158, 11, 0.95) !important;
+  color: white !important;
+  border: 1px solid rgba(245, 158, 11, 1) !important;
+}
+
+/* Force visibility on all toast elements */
+.Toastify__toast-body,
+div[class*="Toastify__toast-body"] {
+  padding: 0.5rem !important;
+  line-height: 1.5 !important;
+  display: block !important;
+  visibility: visible !important;
+}
+
+/* Progress bar */
+.Toastify__progress-bar,
+div[class*="Toastify__progress-bar"] {
+  height: 3px !important;
+  display: block !important;
+}
+
+/* Close button */
+.Toastify__close-button,
+button[class*="Toastify__close-button"] {
+  opacity: 0.7 !important;
+  display: flex !important;
+}
+
+.Toastify__close-button:hover,
+button[class*="Toastify__close-button"]:hover {
+  opacity: 1 !important;
+}
+
+/* Remove any transform that might conflict */
+.Toastify__toast-container > *,
+div[class*="Toastify__toast-container"] > * {
+  transform: none !important;
+}
+
+/* Ensure proper stacking context */
+body > .Toastify__toast-container,
+body > div[class*="Toastify__toast-container"] {
+  isolation: isolate;
+}
+
+/* Mobile optimizations for production */
+@media (max-width: 640px) {
+  .Toastify__toast-container,
+  div[class*="Toastify__toast-container"] {
+    padding: 0.5rem !important;
+    max-width: calc(100vw - 1rem) !important;
+    top: 0.5rem !important;
+  }
+  
+  .Toastify__toast,
+  div[class*="Toastify__toast"] {
+    margin-bottom: 0.5rem !important;
+    border-radius: 0.5rem !important;
+    min-height: 56px !important;
+  }
+}
+
+/* Animation fixes for production */
+@keyframes Toastify__slideInDown {
+  from {
+    transform: translate3d(0, -110%, 0);
+    opacity: 0;
+    visibility: visible;
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+@keyframes Toastify__slideOutUp {
+  from {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+  to {
+    transform: translate3d(0, -110%, 0);
+    opacity: 0;
+  }
+}
+
+/* Override any conflicting animations */
+.Toastify__toast--top-center,
+div[class*="Toastify__toast--top-center"] {
+  animation: Toastify__slideInDown 0.3s ease-out !important;
+}
+
+/* Ensure container doesn't get hidden by other elements */
+#root ~ .Toastify__toast-container,
+#root ~ div[class*="Toastify__toast-container"] {
+  z-index: 99999 !important;
+}
+
+/* Fix for Next.js/React 18+ strict mode in production */
+[data-testid*="toast"],
+[role="alert"] {
+  visibility: visible !important;
+  display: flex !important;
+}
