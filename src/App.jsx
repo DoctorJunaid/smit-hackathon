@@ -12,7 +12,6 @@ import ContactPage from "@/Pages/Contact.jsx";
 import ProtectedRoute from "@/Components/ProtectedRoute.jsx";
 import ScrollToTop from "@/components/ScrollToTop.jsx";
 import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { initializeAuth } from "@/Redux/UserSlice";
 import { syncCartWithUser } from "@/Redux/CartSlice";
 
@@ -60,16 +59,28 @@ const App = () => {
         <Route path="/contact" element={<ContactPage />} />
       </Routes>
       <ToastContainer
-position="top-center"
-autoClose={3000}
-hideProgressBar={false}
-newestOnTop
-closeOnClick
-rtl={false}
-pauseOnFocusLoss
-draggable
-pauseOnHover
-theme="colored"
+  position="top-center"
+  autoClose={3000}
+  hideProgressBar={false}
+  newestOnTop={true}
+  closeOnClick
+  rtl={false}
+  pauseOnFocusLoss
+  draggable
+  pauseOnHover
+  theme="light"
+  style={{
+    position: 'fixed',
+    top: '1rem',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    zIndex: 99999,
+    pointerEvents: 'none'
+  }}
+  toastStyle={{
+    pointerEvents: 'auto',
+    transform: 'none'
+  }}
 />
     </div>
   );
