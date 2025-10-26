@@ -60,28 +60,17 @@ const App = () => {
         <Route path="/contact" element={<ContactPage />} />
       </Routes>
       <ToastContainer
-  position="bottom-center"
-  autoClose={3000}
-  hideProgressBar={false}
-  newestOnTop={true}
-  closeOnClick
-  rtl={false}
-  pauseOnFocusLoss
-  draggable
-  pauseOnHover
-  theme="light"
-  style={{
-    position: 'fixed',
-    top: '1rem',
-    left: '50%',
-    transform: 'translateX(-50%)',
-    zIndex: 99999,
-    pointerEvents: 'none'
-  }}
-  toastStyle={{
-    pointerEvents: 'auto',
-    transform: 'none'
-  }}
+position="top-center"
+autoClose={3000}
+hideProgressBar={false}
+newestOnTop
+closeOnClick
+rtl={false}
+pauseOnFocusLoss
+draggable
+pauseOnHover
+theme="colored"
+transition={Bounce}
 />
     </div>
   );
