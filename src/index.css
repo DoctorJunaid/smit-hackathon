@@ -4,6 +4,16 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Prevent FOUC */
+:root:not(.styles-loaded) * {
+  visibility: hidden !important;
+}
+
+:root.styles-loaded * {
+  visibility: visible !important;
+  transition: visibility 0s;
+}
+
 /* ============================================
    CRITICAL TOAST STYLES - MUST BE AT TOP
    ============================================ */

@@ -11,23 +11,44 @@ import { ToastContainer } from 'react-toastify';
 
 // Function to check if stylesheets are loaded
 const areStylesheetsLoaded = () => {
-  const styleSheets = document.styleSheets;
-  return Array.from(styleSheets).every(sheet => {
-    try {
-      return sheet.cssRules || sheet.rules;
-    } catch (e) {
-      return false;
+  return new Promise((resolve) => {
+    const styleSheets = document.styleSheets;
+    
+    if (Array.from(styleSheets).every(sheet => {
+      try {
+        return sheet.cssRules || sheet.rules;
+      } catch (e) {
+        return false;
+      }
+    })) {
+      resolve();
+    } else {
+      const observer = new MutationObserver((mutationsList, observer) => {
+        if (Array.from(document.styleSheets).every(sheet => {
+          try {
+            return sheet.cssRules || sheet.rules;
+          } catch (e) {
+            return false;
+          }
+        })) {
+          observer.disconnect();
+          resolve();
+        }
+      });
+      
+      observer.observe(document.head, {
+        childList: true,
+        subtree: true
+      });
     }
   });
 };
 
 // Wait for stylesheets and DOM to be ready
-const renderApp = () => {
-  if (!areStylesheetsLoaded()) {
-    requestAnimationFrame(renderApp);
-    return;
-  }
-
+const renderApp = async () => {
+  await areStylesheetsLoaded();
+  document.documentElement.classList.add('styles-loaded');
+  
   const root = createRoot(document.getElementById('root'));
   
   root.render(
