@@ -27,9 +27,6 @@ const renderApp = () => {
     return;
   }
 
-  // Initialize animations
-  initOnDOMReady();
-
   createRoot(document.getElementById('root')).render(
     <StrictMode>
       <BrowserRouter>
@@ -39,6 +36,11 @@ const renderApp = () => {
       </BrowserRouter>
     </StrictMode>
   );
+  
+  // Initialize animations after React has mounted
+  requestAnimationFrame(() => {
+    initOnDOMReady();
+  });
 };
 
 // Start the render process
