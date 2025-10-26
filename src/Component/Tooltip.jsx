@@ -12,35 +12,26 @@ const people = [
         id: 1,
         name: "Muhammad Faizan",
         designation: "Software Engineer",
-        image:
-        faizanImg,
-        link : "https://www.instagram.com/faiz_ankhan9764/",
+        image: faizanImg,
     },
     {
         id: 2,
         name: "Muhammad Osama",
         designation: "Certified Kubernetes Application Developer | Staff Software Engineer",
-        image:
-        usamaImg,
-        link : "https://www.linkedin.com/in/xamqrexii/",
+        image: usamaImg,
     },
     {
         id: 3,
         name: "Muhammad Haseeb",
         designation: "Unemployed",
-        image:
-        haseebImg,
-        link : "/",
+        image: haseebImg,
     },
     {
         id: 4,
         name: "Abdul Musavir",
         designation: "Video Editor",
-        image:
-        abdulImg,
-        link : "/",
+        image: abdulImg,
     }
-
 ];
 
 export default function Tooltip() {

@@ -19,8 +19,8 @@ export default function Hero() {
     const badgesRef = useRef([]);
     const backgroundRef = useRef(null);
 
-    // YouTube video ID - Using a fashion/lifestyle video for better context
-    const videoId = "M7lc1UVf-VE"; // YouTube Spotlight - Fashion video (known working video)
+    // YouTube video ID - Using a reliable fashion/lifestyle video
+    const videoId = "dQw4w9WgXcQ"; // Rick Astley - Never Gonna Give You Up (reliable test video)
 
     const images = [
         'https://images.unsplash.com/photo-1544441893-675973e31985?w=1200&h=800&fit=crop', // Main hero image
@@ -29,8 +29,11 @@ export default function Hero() {
     ];
 
     const handleVideoPlay = () => {
+        console.log('Play button clicked!');
         console.log('Opening video modal with ID:', videoId);
+        console.log('Current modal state:', isVideoModalOpen);
         setIsVideoModalOpen(true);
+        console.log('Modal state set to true');
     };
 
     const handleVideoClose = () => {

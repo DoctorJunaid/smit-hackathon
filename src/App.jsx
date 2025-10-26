@@ -10,6 +10,7 @@ import LoginPage from "@/Pages/Login.jsx";
 import AboutPage from "@/Pages/About.jsx";
 import ContactPage from "@/Pages/Contact.jsx";
 import ProtectedRoute from "@/Components/ProtectedRoute.jsx";
+import ScrollToTop from "@/components/ScrollToTop.jsx";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { initializeAuth } from "@/Redux/UserSlice";
@@ -31,6 +32,7 @@ const App = () => {
 
     return (
         <div>
+            <ScrollToTop />
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/shop" element={<Shop />} />

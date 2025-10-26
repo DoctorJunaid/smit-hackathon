@@ -1,7 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
 import { X, Play, Pause, Volume2, VolumeX, Maximize, Minimize } from 'lucide-react';
-import { gsap } from 'gsap';
-import { videoPlayerAnimations } from '@/utils/animations';
 
 export default function VideoPlayerModal({ isOpen, onClose, videoId, title = "Video Player" }) {
     const [isPlaying, setIsPlaying] = useState(false);
@@ -11,28 +9,29 @@ export default function VideoPlayerModal({ isOpen, onClose, videoId, title = "Vi
     
     const modalRef = useRef(null);
     const playerRef = useRef(null);
-    const controlsRef = useRef(null);
     const controlsTimeoutRef = useRef(null);
 
     // YouTube embed URL - optimized for better compatibility and autoplay
-    const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&controls=1&modestbranding=1&rel=0&showinfo=0&enablejsapi=1&origin=${window.location.origin}`;
+    const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&controls=1&modestbranding=1&rel=0&showinfo=0&enablejsapi=1&playsinline=1`;
     
     // Debug logging
     console.log('VideoPlayerModal - isOpen:', isOpen, 'videoId:', videoId, 'embedUrl:', embedUrl);
 
     useEffect(() => {
         if (isOpen) {
-            // Simple animations without complex GSAP
-            if (modalRef.current) {
-                modalRef.current.style.opacity = '1';
-                modalRef.current.style.transform = 'scale(1)';
-            }
-            if (playerRef.current) {
-                setTimeout(() => {
-                    playerRef.current.style.opacity = '1';
-                    playerRef.current.style.transform = 'translateY(0)';
-                }, 200);
-            }
+            // Animate modal opening
+            requestAnimationFrame(() => {
+                if (modalRef.current) {
+                    modalRef.current.style.opacity = '1';
+                    modalRef.current.style.transform = 'scale(1)';
+                }
+                if (playerRef.current) {
+                    setTimeout(() => {
+                        playerRef.current.style.opacity = '1';
+                        playerRef.current.style.transform = 'translateY(0)';
+                    }, 100);
+                }
+            });
             
             // Prevent body scroll
             document.body.style.overflow = 'hidden';
@@ -49,9 +48,10 @@ export default function VideoPlayerModal({ isOpen, onClose, videoId, title = "Vi
     }, [isOpen]);
 
     const handleClose = () => {
-        if (modalRef.current) {
+        if (modalRef.current && playerRef.current) {
             modalRef.current.style.opacity = '0';
-            modalRef.current.style.transform = 'scale(0.8)';
+            modalRef.current.style.transform = 'scale(0.9)';
+            playerRef.current.style.opacity = '0';
             setTimeout(onClose, 300);
         } else {
             onClose();
@@ -60,17 +60,10 @@ export default function VideoPlayerModal({ isOpen, onClose, videoId, title = "Vi
 
     const togglePlay = () => {
         setIsPlaying(!isPlaying);
-        // Add button animation
-        const playButton = document.querySelector('[aria-label="Pause"], [aria-label="Play"]');
-        if (playButton) {
-            videoPlayerAnimations.playButtonPulse(playButton);
-        }
-        // In a real implementation, you'd control the YouTube player here
     };
 
     const toggleMute = () => {
         setIsMuted(!isMuted);
-        // In a real implementation, you'd control the YouTube player here
     };
 
     const toggleFullscreen = () => {
@@ -101,62 +94,190 @@ export default function VideoPlayerModal({ isOpen, onClose, videoId, title = "Vi
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div 
+            style={{ 
+                position: 'fixed', 
+                top: '0', 
+                left: '0', 
+                right: '0',
+                bottom: '0',
+                width: '100vw', 
+                height: '100vh',
+                zIndex: 9999,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '20px'
+            }}
+        >
             {/* Backdrop */}
             <div 
-                className="absolute inset-0 bg-black/90 backdrop-blur-sm"
                 onClick={handleClose}
+                style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    width: '100%',
+                    height: '100%',
+                    backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                    backdropFilter: 'blur(4px)'
+                }}
             />
             
-            {/* Modal */}
+            {/* Modal Container */}
             <div 
                 ref={modalRef}
-                className="relative w-full max-w-4xl mx-auto opacity-0 transform scale-90 transition-all duration-300"
+                style={{ 
+                    opacity: 0,
+                    transform: 'scale(0.9)',
+                    transition: 'all 0.3s ease',
+                    zIndex: 10,
+                    position: 'relative',
+                    width: '100%',
+                    maxWidth: '1200px',
+                    margin: '0 auto'
+                }}
             >
-                {/* Close Button - Moved inside and more visible */}
+                {/* Close Button */}
                 <button
                     onClick={handleClose}
-                    className="absolute top-4 right-4 z-30 p-2 text-white hover:text-red-400 transition-all duration-200 hover:scale-110 bg-black/60 rounded-full backdrop-blur-sm border border-white/20"
+                    style={{
+                        position: 'absolute',
+                        top: '-60px',
+                        right: '0',
+                        zIndex: 30,
+                        padding: '12px',
+                        color: 'white',
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        border: '1px solid rgba(255, 255, 255, 0.3)',
+                        borderRadius: '50%',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                    }}
+                    onMouseEnter={(e) => {
+                        e.currentTarget.style.color = '#ef4444';
+                        e.currentTarget.style.transform = 'scale(1.1)';
+                    }}
+                    onMouseLeave={(e) => {
+                        e.currentTarget.style.color = 'white';
+                        e.currentTarget.style.transform = 'scale(1)';
+                    }}
                     aria-label="Close video"
                 >
-                    <X size={24} />
+                    <X size={28} />
                 </button>
 
                 {/* Video Player Container */}
                 <div 
                     ref={playerRef}
-                    className="relative bg-black rounded-lg overflow-hidden shadow-2xl opacity-0 transform translate-y-8 transition-all duration-500 mx-auto"
+                    style={{ 
+                        opacity: 0,
+                        transform: 'translateY(20px)',
+                        transition: 'all 0.5s ease',
+                        width: '100%',
+                        position: 'relative',
+                        backgroundColor: 'black',
+                        borderRadius: '8px',
+                        overflow: 'hidden',
+                        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)'
+                    }}
                     onMouseMove={handleMouseMove}
                     onMouseLeave={handleMouseLeave}
                 >
                     {/* Video Title */}
-                    <div className={`absolute top-0 left-0 right-0 z-20 bg-gradient-to-b from-black/70 to-transparent p-6 transition-opacity duration-300 ${showControls ? 'opacity-100' : 'opacity-0'}`}>
-                        <h3 className="text-white text-xl font-medium pr-16">{title}</h3>
+                    <div 
+                        style={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            zIndex: 20,
+                            background: 'linear-gradient(to bottom, rgba(0, 0, 0, 0.7), transparent)',
+                            padding: '24px',
+                            transition: 'opacity 0.3s',
+                            opacity: showControls ? 1 : 0
+                        }}
+                    >
+                        <h3 style={{ color: 'white', fontSize: '20px', fontWeight: '500', paddingRight: '64px', margin: 0 }}>
+                            {title}
+                        </h3>
                     </div>
 
                     {/* YouTube Iframe */}
-                    <div className="relative aspect-video w-full">
-                        <iframe
-                            src={embedUrl}
-                            className="w-full h-full rounded-lg"
-                            style={{ border: 'none' }}
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                            allowFullScreen
-                            title={title}
-                        />
+                    <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0, width: '100%' }}>
+                        {videoId ? (
+                            <iframe
+                                src={embedUrl}
+                                style={{ 
+                                    position: 'absolute',
+                                    top: 0,
+                                    left: 0,
+                                    width: '100%',
+                                    height: '100%',
+                                    border: 'none'
+                                }}
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                allowFullScreen
+                                title={title}
+                                loading="lazy"
+                                referrerPolicy="strict-origin-when-cross-origin"
+                                onLoad={() => console.log('Video iframe loaded successfully')}
+                                onError={() => console.error('Video iframe failed to load')}
+                            />
+                        ) : (
+                            <div style={{ 
+                                position: 'absolute',
+                                top: 0,
+                                left: 0,
+                                width: '100%', 
+                                height: '100%', 
+                                display: 'flex', 
+                                alignItems: 'center', 
+                                justifyContent: 'center', 
+                                backgroundColor: '#1f2937', 
+                                color: 'white' 
+                            }}>
+                                <p>Video not available</p>
+                            </div>
+                        )}
                     </div>
 
                     {/* Custom Controls Overlay */}
                     <div 
-                        ref={controlsRef}
-                        className={`absolute bottom-0 left-0 right-0 z-20 bg-gradient-to-t from-black/70 to-transparent p-6 transition-opacity duration-300 ${showControls ? 'opacity-100' : 'opacity-0'}`}
+                        style={{
+                            position: 'absolute',
+                            bottom: 0,
+                            left: 0,
+                            right: 0,
+                            zIndex: 20,
+                            background: 'linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent)',
+                            padding: '24px',
+                            transition: 'opacity 0.3s',
+                            opacity: showControls ? 1 : 0
+                        }}
                     >
-                        <div className="flex items-center justify-between">
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                             {/* Left Controls */}
-                            <div className="flex items-center gap-4">
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                                 <button
                                     onClick={togglePlay}
-                                    className="p-2 text-white hover:text-gray-300 transition-colors"
+                                    style={{ 
+                                        padding: '8px', 
+                                        color: 'white', 
+                                        backgroundColor: 'transparent',
+                                        border: 'none',
+                                        cursor: 'pointer',
+                                        transition: 'color 0.2s',
+                                        display: 'flex',
+                                        alignItems: 'center'
+                                    }}
+                                    onMouseEnter={(e) => e.currentTarget.style.color = '#d1d5db'}
+                                    onMouseLeave={(e) => e.currentTarget.style.color = 'white'}
                                     aria-label={isPlaying ? 'Pause' : 'Play'}
                                 >
                                     {isPlaying ? <Pause size={20} /> : <Play size={20} />}
@@ -164,7 +285,18 @@ export default function VideoPlayerModal({ isOpen, onClose, videoId, title = "Vi
                                 
                                 <button
                                     onClick={toggleMute}
-                                    className="p-2 text-white hover:text-gray-300 transition-colors"
+                                    style={{ 
+                                        padding: '8px', 
+                                        color: 'white', 
+                                        backgroundColor: 'transparent',
+                                        border: 'none',
+                                        cursor: 'pointer',
+                                        transition: 'color 0.2s',
+                                        display: 'flex',
+                                        alignItems: 'center'
+                                    }}
+                                    onMouseEnter={(e) => e.currentTarget.style.color = '#d1d5db'}
+                                    onMouseLeave={(e) => e.currentTarget.style.color = 'white'}
                                     aria-label={isMuted ? 'Unmute' : 'Mute'}
                                 >
                                     {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
@@ -172,10 +304,21 @@ export default function VideoPlayerModal({ isOpen, onClose, videoId, title = "Vi
                             </div>
 
                             {/* Right Controls */}
-                            <div className="flex items-center gap-4">
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                                 <button
                                     onClick={toggleFullscreen}
-                                    className="p-2 text-white hover:text-gray-300 transition-colors"
+                                    style={{ 
+                                        padding: '8px', 
+                                        color: 'white', 
+                                        backgroundColor: 'transparent',
+                                        border: 'none',
+                                        cursor: 'pointer',
+                                        transition: 'color 0.2s',
+                                        display: 'flex',
+                                        alignItems: 'center'
+                                    }}
+                                    onMouseEnter={(e) => e.currentTarget.style.color = '#d1d5db'}
+                                    onMouseLeave={(e) => e.currentTarget.style.color = 'white'}
                                     aria-label={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}
                                 >
                                     {isFullscreen ? <Minimize size={20} /> : <Maximize size={20} />}
@@ -183,8 +326,6 @@ export default function VideoPlayerModal({ isOpen, onClose, videoId, title = "Vi
                             </div>
                         </div>
                     </div>
-
-
                 </div>
             </div>
         </div>
