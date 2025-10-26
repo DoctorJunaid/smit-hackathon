@@ -1,6 +1,5 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { createPortal } from 'react-dom'
 import './index.css'
 import 'react-toastify/dist/ReactToastify.css'
 import App from './App.jsx'
@@ -36,20 +35,31 @@ const renderApp = () => {
       <BrowserRouter>
         <Provider store={store}>
           <App />
-          {createPortal(
-            <ToastContainer
-              position="top-center"
-              autoClose={2000}
-              newestOnTop={true}
-              closeOnClick
-              draggable
-              theme="light"
-              containerId="main-toast"
-              style={{ zIndex: 99999 }}
-              containerClassName="toast-root"
-            />,
-            document.body
-          )}
+          <ToastContainer
+            position="top-center"
+            autoClose={2000}
+            newestOnTop={true}
+            closeOnClick
+            draggable
+            theme="light"
+            style={{
+              position: 'fixed',
+              top: '1rem',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              zIndex: 99999,
+              pointerEvents: 'none',
+              willChange: 'auto'
+            }}
+            toastStyle={{
+              pointerEvents: 'auto',
+              transform: 'none',
+              willChange: 'auto'
+            }}
+            bodyStyle={{
+              willChange: 'auto'
+            }}
+          />
         </Provider>
       </BrowserRouter>
     </StrictMode>

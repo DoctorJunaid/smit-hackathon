@@ -11,7 +11,6 @@ import AboutPage from "@/Pages/About.jsx";
 import ContactPage from "@/Pages/Contact.jsx";
 import ProtectedRoute from "@/Components/ProtectedRoute.jsx";
 import ScrollToTop from "@/components/ScrollToTop.jsx";
-import { ToastContainer } from "react-toastify";
 import { initializeAuth } from "@/Redux/UserSlice";
 import { syncCartWithUser } from "@/Redux/CartSlice";
 
@@ -30,6 +29,32 @@ const App = () => {
       dispatch(syncCartWithUser({ userId: currentUser.id }));
     }
   }, [dispatch]);
+
+  // Prevent GSAP from affecting toast container
+  useEffect(() => {
+    const style = document.createElement('style');
+    style.innerHTML = `
+      .Toastify__toast-container {
+        position: fixed !important;
+        top: 1rem !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        z-index: 99999 !important;
+        pointer-events: none;
+        will-change: auto !important;
+      }
+      .Toastify__toast {
+        pointer-events: auto;
+        transform: none !important;
+        will-change: auto !important;
+      }
+    `;
+    document.head.appendChild(style);
+    
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
 
   return (
     <div>
@@ -58,30 +83,6 @@ const App = () => {
         <Route path="/about" element={<AboutPage />} />
         <Route path="/contact" element={<ContactPage />} />
       </Routes>
-      <ToastContainer
-  position="top-center"
-  autoClose={3000}
-  hideProgressBar={false}
-  newestOnTop={true}
-  closeOnClick
-  rtl={false}
-  pauseOnFocusLoss
-  draggable
-  pauseOnHover
-  theme="light"
-  style={{
-    position: 'fixed',
-    top: '1rem',
-    left: '50%',
-    transform: 'translateX(-50%)',
-    zIndex: 99999,
-    pointerEvents: 'none'
-  }}
-  toastStyle={{
-    pointerEvents: 'auto',
-    transform: 'none'
-  }}
-/>
     </div>
   );
 };

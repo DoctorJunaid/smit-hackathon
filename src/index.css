@@ -668,3 +668,46 @@ html {
     transition-duration: 0.01ms !important;
   }
 }
+/* Add this to the end of your index.css file */
+
+/* Toast Container - Fixed positioning that resists GSAP */
+.Toastify__toast-container {
+  position: fixed !important;
+  top: 1rem !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  z-index: 99999 !important;
+  pointer-events: none !important;
+  will-change: auto !important;
+  /* Prevent GSAP from touching this */
+  animation: none !important;
+}
+
+.Toastify__toast {
+  pointer-events: auto !important;
+  transform: none !important;
+  will-change: auto !important;
+  position: relative !important;
+  animation: Toastify__slideInDown 0.3s !important;
+}
+
+.Toastify__toast-body {
+  will-change: auto !important;
+}
+
+/* Override any scroll-based transforms */
+body[style*="transform"] .Toastify__toast-container {
+  transform: translateX(-50%) !important;
+}
+
+/* Ensure toast stays on top during GSAP animations */
+@keyframes Toastify__slideInDown {
+  from {
+    transform: translate3d(0, -110%, 0);
+    opacity: 0;
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+}

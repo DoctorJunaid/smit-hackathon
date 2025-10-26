@@ -12,8 +12,11 @@ export const initGlobalAnimations = () => {
     nullTargetWarn: false
   });
 
+  // Exclude toast containers from GSAP animations
+  const gsapExcludeSelector = ':not(.Toastify__toast-container):not(.Toastify__toast):not(.Toastify__toast-body)';
+
   // Global scroll-triggered animations
-  gsap.utils.toArray('.fade-in-up').forEach((element) => {
+  gsap.utils.toArray(`.fade-in-up${gsapExcludeSelector}`).forEach((element) => {
     gsap.fromTo(element, 
       { opacity: 0, y: 50 },
       {
@@ -32,7 +35,7 @@ export const initGlobalAnimations = () => {
   });
 
   // Global scale animations
-  gsap.utils.toArray('.scale-in').forEach((element) => {
+  gsap.utils.toArray(`.scale-in${gsapExcludeSelector}`).forEach((element) => {
     gsap.fromTo(element,
       { opacity: 0, scale: 0.8 },
       {
@@ -50,7 +53,7 @@ export const initGlobalAnimations = () => {
   });
 
   // Global stagger animations
-  gsap.utils.toArray('.stagger-container').forEach((container) => {
+  gsap.utils.toArray(`.stagger-container${gsapExcludeSelector}`).forEach((container) => {
     const items = container.querySelectorAll('.stagger-item');
     gsap.fromTo(items,
       { opacity: 0, y: 30 },
@@ -70,7 +73,7 @@ export const initGlobalAnimations = () => {
   });
 
   // Parallax effects
-  gsap.utils.toArray('.parallax').forEach((element) => {
+  gsap.utils.toArray(`.parallax${gsapExcludeSelector}`).forEach((element) => {
     gsap.to(element, {
       yPercent: -50,
       ease: "none",
@@ -132,5 +135,6 @@ export const batchAnimations = (animations) => {
 // Cleanup function for route changes
 export const cleanupAnimations = () => {
   ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-  gsap.killTweensOf("*");
+  // Don't kill toasts
+  gsap.killTweensOf("*:not(.Toastify__toast-container):not(.Toastify__toast):not(.Toastify__toast-body)");
 };
