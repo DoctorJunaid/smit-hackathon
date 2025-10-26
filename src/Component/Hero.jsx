@@ -19,8 +19,15 @@ export default function Hero() {
     const badgesRef = useRef([]);
     const backgroundRef = useRef(null);
 
-    // YouTube video ID - Using a reliable fashion/lifestyle video
-    const videoId = "dQw4w9WgXcQ"; // Rick Astley - Never Gonna Give You Up (reliable test video)
+    // YouTube video ID - Using a reliable fashion/lifestyle video that allows embedding
+    const videoId = "YGQBm9Mnad8"; // Fashion/lifestyle video that allows embedding
+
+    // Fallback video IDs in case the primary one fails
+    const fallbackVideoIds = [
+        "M7lc1UVf-VE", // Primary
+        "jNQXAC9IVRw", // Alternative fashion video
+        "ScMzIvxBSi4"  // Another alternative
+    ];
 
     const images = [
         'https://images.unsplash.com/photo-1544441893-675973e31985?w=1200&h=800&fit=crop', // Main hero image
@@ -34,10 +41,17 @@ export default function Hero() {
         console.log('Current modal state:', isVideoModalOpen);
         setIsVideoModalOpen(true);
         console.log('Modal state set to true');
+
+        // Prevent body scroll when modal opens
+        document.body.style.overflow = 'hidden';
     };
 
     const handleVideoClose = () => {
+        console.log('Closing video modal');
         setIsVideoModalOpen(false);
+
+        // Restore body scroll when modal closes
+        document.body.style.overflow = 'unset';
     };
 
     useEffect(() => {
@@ -188,7 +202,7 @@ export default function Hero() {
                         <div ref={buttonsRef} className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
 
                             {/* Primary Button - Link to Shop */}
-                            <Link 
+                            <Link
                                 to="/shop"
                                 className="group relative overflow-hidden bg-black text-white px-10 py-4 rounded-full text-sm font-semibold tracking-wider transition-all duration-300 hover:shadow-xl hover:scale-105 inline-flex items-center justify-center"
                             >
@@ -199,7 +213,7 @@ export default function Hero() {
                             </Link>
 
                             {/* Secondary Button - Link to About */}
-                            <Link 
+                            <Link
                                 to="/about"
                                 className="group relative overflow-hidden border-2 border-black text-black px-10 py-4 rounded-full text-sm font-semibold tracking-wider transition-all duration-300 hover:shadow-xl hover:scale-105 inline-flex items-center justify-center"
                             >
@@ -278,7 +292,7 @@ export default function Hero() {
                                         aria-label="Play video"
                                     >
                                         <svg className="w-8 h-8 text-black ml-1" fill="currentColor" viewBox="0 0 24 24">
-                                            <path d="M8 5v14l11-7z"/>
+                                            <path d="M8 5v14l11-7z" />
                                         </svg>
                                     </button>
 

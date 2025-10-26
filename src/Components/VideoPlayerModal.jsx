@@ -1,45 +1,67 @@
 import { useState, useEffect, useRef } from 'react';
-import { X, Play, Pause, Volume2, VolumeX, Maximize, Minimize } from 'lucide-react';
+import { X } from 'lucide-react';
 
 export default function VideoPlayerModal({ isOpen, onClose, videoId, title = "Video Player" }) {
-    const [isPlaying, setIsPlaying] = useState(false);
-    const [isMuted, setIsMuted] = useState(false);
-    const [isFullscreen, setIsFullscreen] = useState(false);
-    const [showControls, setShowControls] = useState(true);
-    
+    const [isLoading, setIsLoading] = useState(true);
+    const [hasError, setHasError] = useState(false);
+    const [modalStyle, setModalStyle] = useState({});
     const modalRef = useRef(null);
-    const playerRef = useRef(null);
-    const controlsTimeoutRef = useRef(null);
 
-    // YouTube embed URL - optimized for better compatibility and autoplay
-    const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&controls=1&modestbranding=1&rel=0&showinfo=0&enablejsapi=1&playsinline=1`;
-    
-    // Debug logging
-    console.log('VideoPlayerModal - isOpen:', isOpen, 'videoId:', videoId, 'embedUrl:', embedUrl);
+    // YouTube embed URL
+    const embedUrl = videoId ? `https://www.youtube.com/embed/${videoId}?autoplay=1&controls=1&modestbranding=1&rel=0&enablejsapi=1&playsinline=1` : null;
+
+    // Calculate optimal modal size and position
+    const calculateModalDimensions = () => {
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
+
+        // Calculate maximum dimensions with padding
+        const maxWidth = Math.min(viewportWidth - 40, 1200); // 20px padding on each side, max 1200px
+        const maxHeight = viewportHeight - 100; // 50px padding top/bottom
+
+        // Calculate height based on 16:9 aspect ratio + header height
+        const headerHeight = 72; // Header height including padding and border
+        const videoHeight = (maxWidth * 9) / 16;
+        const totalHeight = videoHeight + headerHeight;
+
+        // If total height exceeds viewport, scale down
+        let finalWidth = maxWidth;
+        
+        if (totalHeight > maxHeight) {
+            const availableVideoHeight = maxHeight - headerHeight;
+            finalWidth = (availableVideoHeight * 16) / 9;
+        }
+
+        return {
+            width: `${Math.floor(finalWidth)}px`,
+            maxWidth: '95vw',
+            maxHeight: '90vh'
+        };
+    };
 
     useEffect(() => {
         if (isOpen) {
-            // Animate modal opening
-            requestAnimationFrame(() => {
-                if (modalRef.current) {
-                    modalRef.current.style.opacity = '1';
-                    modalRef.current.style.transform = 'scale(1)';
-                }
-                if (playerRef.current) {
-                    setTimeout(() => {
-                        playerRef.current.style.opacity = '1';
-                        playerRef.current.style.transform = 'translateY(0)';
-                    }, 100);
-                }
-            });
-            
-            // Prevent body scroll
+            setIsLoading(true);
+            setHasError(false);
             document.body.style.overflow = 'hidden';
-            setIsPlaying(true);
+
+            // Calculate and set modal dimensions
+            const dimensions = calculateModalDimensions();
+            setModalStyle(dimensions);
+
+            // Recalculate on window resize
+            const handleResize = () => {
+                const newDimensions = calculateModalDimensions();
+                setModalStyle(newDimensions);
+            };
+
+            window.addEventListener('resize', handleResize);
+
+            return () => {
+                window.removeEventListener('resize', handleResize);
+            };
         } else {
-            // Restore body scroll
             document.body.style.overflow = 'unset';
-            setIsPlaying(false);
         }
 
         return () => {
@@ -47,284 +69,127 @@ export default function VideoPlayerModal({ isOpen, onClose, videoId, title = "Vi
         };
     }, [isOpen]);
 
-    const handleClose = () => {
-        if (modalRef.current && playerRef.current) {
-            modalRef.current.style.opacity = '0';
-            modalRef.current.style.transform = 'scale(0.9)';
-            playerRef.current.style.opacity = '0';
-            setTimeout(onClose, 300);
-        } else {
-            onClose();
+    useEffect(() => {
+        const handleEscape = (e) => {
+            if (e.key === 'Escape') {
+                onClose();
+            }
+        };
+
+        if (isOpen) {
+            document.addEventListener('keydown', handleEscape);
         }
-    };
 
-    const togglePlay = () => {
-        setIsPlaying(!isPlaying);
-    };
+        return () => {
+            document.removeEventListener('keydown', handleEscape);
+        };
+    }, [isOpen, onClose]);
 
-    const toggleMute = () => {
-        setIsMuted(!isMuted);
-    };
+    // Scroll modal into view if needed
+    useEffect(() => {
+        if (isOpen && modalRef.current) {
+            const modal = modalRef.current;
+            const rect = modal.getBoundingClientRect();
 
-    const toggleFullscreen = () => {
-        if (!document.fullscreenElement) {
-            playerRef.current?.requestFullscreen();
-            setIsFullscreen(true);
-        } else {
-            document.exitFullscreen();
-            setIsFullscreen(false);
+            // Check if modal is fully visible
+            if (rect.top < 0 || rect.bottom > window.innerHeight) {
+                // Scroll to center the modal
+                modal.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center',
+                    inline: 'center'
+                });
+            }
         }
-    };
-
-    const handleMouseMove = () => {
-        setShowControls(true);
-        clearTimeout(controlsTimeoutRef.current);
-        controlsTimeoutRef.current = setTimeout(() => {
-            setShowControls(false);
-        }, 3000);
-    };
-
-    const handleMouseLeave = () => {
-        clearTimeout(controlsTimeoutRef.current);
-        controlsTimeoutRef.current = setTimeout(() => {
-            setShowControls(false);
-        }, 1000);
-    };
+    }, [isOpen, modalStyle]);
 
     if (!isOpen) return null;
 
     return (
-        <div 
-            style={{ 
-                position: 'fixed', 
-                top: '0', 
-                left: '0', 
-                right: '0',
-                bottom: '0',
-                width: '100vw', 
-                height: '100vh',
-                zIndex: 9999,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                padding: '20px'
-            }}
-        >
+        <div className="fixed inset-0 z-[9999] overflow-auto">
             {/* Backdrop */}
-            <div 
-                onClick={handleClose}
-                style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    width: '100%',
-                    height: '100%',
-                    backgroundColor: 'rgba(0, 0, 0, 0.9)',
-                    backdropFilter: 'blur(4px)'
-                }}
+            <div
+                className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+                onClick={onClose}
             />
-            
-            {/* Modal Container */}
-            <div 
-                ref={modalRef}
-                style={{ 
-                    opacity: 0,
-                    transform: 'scale(0.9)',
-                    transition: 'all 0.3s ease',
-                    zIndex: 10,
-                    position: 'relative',
-                    width: '100%',
-                    maxWidth: '1200px',
-                    margin: '0 auto'
-                }}
-            >
-                {/* Close Button */}
-                <button
-                    onClick={handleClose}
-                    style={{
-                        position: 'absolute',
-                        top: '-60px',
-                        right: '0',
-                        zIndex: 30,
-                        padding: '12px',
-                        color: 'white',
-                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                        border: '1px solid rgba(255, 255, 255, 0.3)',
-                        borderRadius: '50%',
-                        cursor: 'pointer',
-                        transition: 'all 0.2s',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                    }}
-                    onMouseEnter={(e) => {
-                        e.currentTarget.style.color = '#ef4444';
-                        e.currentTarget.style.transform = 'scale(1.1)';
-                    }}
-                    onMouseLeave={(e) => {
-                        e.currentTarget.style.color = 'white';
-                        e.currentTarget.style.transform = 'scale(1)';
-                    }}
-                    aria-label="Close video"
-                >
-                    <X size={28} />
-                </button>
 
-                {/* Video Player Container */}
-                <div 
-                    ref={playerRef}
-                    style={{ 
-                        opacity: 0,
-                        transform: 'translateY(20px)',
-                        transition: 'all 0.5s ease',
-                        width: '100%',
-                        position: 'relative',
-                        backgroundColor: 'black',
-                        borderRadius: '8px',
-                        overflow: 'hidden',
-                        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)'
-                    }}
-                    onMouseMove={handleMouseMove}
-                    onMouseLeave={handleMouseLeave}
+            {/* Modal Container - Centered with flex */}
+            <div className="min-h-full flex items-center justify-center p-4">
+                {/* Modal */}
+                <div
+                    ref={modalRef}
+                    className="relative z-10 bg-white rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-300"
+                    style={modalStyle}
                 >
-                    {/* Video Title */}
-                    <div 
-                        style={{
-                            position: 'absolute',
-                            top: 0,
-                            left: 0,
-                            right: 0,
-                            zIndex: 20,
-                            background: 'linear-gradient(to bottom, rgba(0, 0, 0, 0.7), transparent)',
-                            padding: '24px',
-                            transition: 'opacity 0.3s',
-                            opacity: showControls ? 1 : 0
-                        }}
-                    >
-                        <h3 style={{ color: 'white', fontSize: '20px', fontWeight: '500', paddingRight: '64px', margin: 0 }}>
+                    {/* Header */}
+                    <div className="flex items-center justify-between p-4 bg-gray-50 border-b shrink-0">
+                        <h3 className="text-lg font-semibold text-gray-900 truncate pr-4">
                             {title}
                         </h3>
+                        <button
+                            onClick={onClose}
+                            className="shrink-0 p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-200 rounded-full transition-colors"
+                            aria-label="Close video"
+                        >
+                            <X size={20} />
+                        </button>
                     </div>
 
-                    {/* YouTube Iframe */}
-                    <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0, width: '100%' }}>
-                        {videoId ? (
+                    {/* Video Container - Perfect 16:9 aspect ratio */}
+                    <div className="relative bg-black w-full" style={{ aspectRatio: '16/9' }}>
+                        {/* Loading State */}
+                        {isLoading && (
+                            <div className="absolute inset-0 flex items-center justify-center bg-gray-900">
+                                <div className="text-center text-white">
+                                    <div className="w-8 h-8 border-2 border-gray-600 border-t-white rounded-full animate-spin mx-auto mb-3"></div>
+                                    <p className="text-sm">Loading video...</p>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Error State */}
+                        {hasError && (
+                            <div className="absolute inset-0 flex items-center justify-center bg-gray-900">
+                                <div className="text-center text-white">
+                                    <p className="mb-3">Failed to load video</p>
+                                    <button
+                                        onClick={() => {
+                                            setHasError(false);
+                                            setIsLoading(true);
+                                        }}
+                                        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+                                    >
+                                        Try Again
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Video Iframe */}
+                        {videoId && embedUrl && !hasError && (
                             <iframe
                                 src={embedUrl}
-                                style={{ 
-                                    position: 'absolute',
-                                    top: 0,
-                                    left: 0,
-                                    width: '100%',
-                                    height: '100%',
-                                    border: 'none'
-                                }}
+                                className="absolute inset-0 w-full h-full border-0"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                 allowFullScreen
                                 title={title}
-                                loading="lazy"
-                                referrerPolicy="strict-origin-when-cross-origin"
-                                onLoad={() => console.log('Video iframe loaded successfully')}
-                                onError={() => console.error('Video iframe failed to load')}
+                                onLoad={() => {
+                                    setIsLoading(false);
+                                    setHasError(false);
+                                }}
+                                onError={() => {
+                                    setIsLoading(false);
+                                    setHasError(true);
+                                }}
                             />
-                        ) : (
-                            <div style={{ 
-                                position: 'absolute',
-                                top: 0,
-                                left: 0,
-                                width: '100%', 
-                                height: '100%', 
-                                display: 'flex', 
-                                alignItems: 'center', 
-                                justifyContent: 'center', 
-                                backgroundColor: '#1f2937', 
-                                color: 'white' 
-                            }}>
-                                <p>Video not available</p>
+                        )}
+
+                        {/* No Video ID */}
+                        {!videoId && (
+                            <div className="absolute inset-0 flex items-center justify-center bg-gray-900">
+                                <p className="text-white">No video available</p>
                             </div>
                         )}
-                    </div>
-
-                    {/* Custom Controls Overlay */}
-                    <div 
-                        style={{
-                            position: 'absolute',
-                            bottom: 0,
-                            left: 0,
-                            right: 0,
-                            zIndex: 20,
-                            background: 'linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent)',
-                            padding: '24px',
-                            transition: 'opacity 0.3s',
-                            opacity: showControls ? 1 : 0
-                        }}
-                    >
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                            {/* Left Controls */}
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                                <button
-                                    onClick={togglePlay}
-                                    style={{ 
-                                        padding: '8px', 
-                                        color: 'white', 
-                                        backgroundColor: 'transparent',
-                                        border: 'none',
-                                        cursor: 'pointer',
-                                        transition: 'color 0.2s',
-                                        display: 'flex',
-                                        alignItems: 'center'
-                                    }}
-                                    onMouseEnter={(e) => e.currentTarget.style.color = '#d1d5db'}
-                                    onMouseLeave={(e) => e.currentTarget.style.color = 'white'}
-                                    aria-label={isPlaying ? 'Pause' : 'Play'}
-                                >
-                                    {isPlaying ? <Pause size={20} /> : <Play size={20} />}
-                                </button>
-                                
-                                <button
-                                    onClick={toggleMute}
-                                    style={{ 
-                                        padding: '8px', 
-                                        color: 'white', 
-                                        backgroundColor: 'transparent',
-                                        border: 'none',
-                                        cursor: 'pointer',
-                                        transition: 'color 0.2s',
-                                        display: 'flex',
-                                        alignItems: 'center'
-                                    }}
-                                    onMouseEnter={(e) => e.currentTarget.style.color = '#d1d5db'}
-                                    onMouseLeave={(e) => e.currentTarget.style.color = 'white'}
-                                    aria-label={isMuted ? 'Unmute' : 'Mute'}
-                                >
-                                    {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
-                                </button>
-                            </div>
-
-                            {/* Right Controls */}
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                                <button
-                                    onClick={toggleFullscreen}
-                                    style={{ 
-                                        padding: '8px', 
-                                        color: 'white', 
-                                        backgroundColor: 'transparent',
-                                        border: 'none',
-                                        cursor: 'pointer',
-                                        transition: 'color 0.2s',
-                                        display: 'flex',
-                                        alignItems: 'center'
-                                    }}
-                                    onMouseEnter={(e) => e.currentTarget.style.color = '#d1d5db'}
-                                    onMouseLeave={(e) => e.currentTarget.style.color = 'white'}
-                                    aria-label={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}
-                                >
-                                    {isFullscreen ? <Minimize size={20} /> : <Maximize size={20} />}
-                                </button>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
