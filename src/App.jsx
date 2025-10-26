@@ -60,7 +60,7 @@ const App = () => {
         <Route path="/contact" element={<ContactPage />} />
       </Routes>
       <ToastContainer
-  position="top-center"
+  position="bottom-center"
   autoClose={3000}
   hideProgressBar={false}
   newestOnTop={true}
