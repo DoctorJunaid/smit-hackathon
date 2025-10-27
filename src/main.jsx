@@ -53,10 +53,10 @@ const renderApp = async () => {
   
   root.render(
     <StrictMode>
-      <BrowserRouter>
         <Provider store={store}>
+      <BrowserRouter>
           <App />
-          <ToastContainer
+          </BrowserRouter><ToastContainer
             position="top-center"
             autoClose={2000}
             newestOnTop={true}
@@ -82,7 +82,7 @@ const renderApp = async () => {
             }}
           />
         </Provider>
-      </BrowserRouter>
+      
     </StrictMode>
   );
   
