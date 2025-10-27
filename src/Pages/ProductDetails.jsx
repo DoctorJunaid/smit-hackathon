@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Heart, ShoppingBag, Star, Minus, Plus, ArrowLeft, Share2, Truck, Shield, RotateCcw } from 'lucide-react';
 import { addToCart } from '@/Redux/CartSlice';
 import { updateUserCart } from '@/Redux/UserSlice';
-import { toast } from 'react-toastify';
+import toast from "react-hot-toast";
 import axios from 'axios';
 import Navbar from '@/Component/Navbar.jsx';
 import Footer from '@/Component/Footer.jsx';

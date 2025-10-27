@@ -13,7 +13,7 @@ export const initGlobalAnimations = () => {
   });
 
   // Exclude toast containers from GSAP animations
-  const gsapExcludeSelector = ':not(.Toastify__toast-container):not(.Toastify__toast):not(.Toastify__toast-body)';
+  const gsapExcludeSelector = ':not([data-react-hot-toast])';
 
   // Global scroll-triggered animations
   gsap.utils.toArray(`.fade-in-up${gsapExcludeSelector}`).forEach((element) => {
@@ -136,5 +136,5 @@ export const batchAnimations = (animations) => {
 export const cleanupAnimations = () => {
   ScrollTrigger.getAll().forEach(trigger => trigger.kill());
   // Don't kill toasts
-  gsap.killTweensOf("*:not(.Toastify__toast-container):not(.Toastify__toast):not(.Toastify__toast-body)");
+  gsap.killTweensOf("*:not([data-react-hot-toast])");
 };

@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
 import { clearCart } from '@/Redux/CartSlice';
 import { ShoppingBag, CreditCard, MapPin, User, Mail, Lock } from 'lucide-react';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import Navbar from '@/Component/Navbar';
 import Footer from '@/Component/Footer';
 

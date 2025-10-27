@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux';
 import { Navigate } from 'react-router';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 
 export default function ProtectedRoute({ children }) {
     const { isAuthenticated } = useSelector((state) => state.user);

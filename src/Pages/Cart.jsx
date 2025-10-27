@@ -5,7 +5,7 @@ import { removeFromCart, updateQuantity, clearCart, syncCartWithUser } from "@/R
 import { updateUserCart } from "@/Redux/UserSlice";
 import Navbar from "../Component/Navbar";
 import Footer from "../Component/Footer";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 
 import {
   ShoppingCart,

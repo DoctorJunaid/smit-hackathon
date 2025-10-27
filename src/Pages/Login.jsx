@@ -4,7 +4,7 @@ import Footer from '@/Component/Footer';
 import { useDispatch, useSelector } from 'react-redux';
 import { login, signup, clearError } from '@/Redux/UserSlice';
 import { syncCartWithUser } from '@/Redux/CartSlice';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 
 export default function LoginPage() {

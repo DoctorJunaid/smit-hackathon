@@ -3,7 +3,7 @@ import { Heart, ShoppingBag, Eye } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from '@/Redux/CartSlice';
 import { updateUserCart } from '@/Redux/UserSlice';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { gsap } from 'gsap';
 import { useHoverAnimation, useScrollAnimation } from '@/hooks/useGSAP';

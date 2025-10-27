@@ -1,13 +1,12 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import 'react-toastify/dist/ReactToastify.css'
 import App from './App.jsx'
 import { BrowserRouter } from "react-router"
 import { Provider } from "react-redux";
 import store from "@/app/store";
 import { initOnDOMReady } from '@/utils/initAnimations';
-import { ToastContainer } from 'react-toastify';
+import { Toaster } from 'react-hot-toast';
 
 // Function to check if stylesheets are loaded
 const areStylesheetsLoaded = () => {
@@ -57,18 +56,23 @@ const renderApp = async () => {
       <BrowserRouter>
           <App />
           </BrowserRouter>
-          <ToastContainer
-        position="top-center" 
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={true}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
+                    <Toaster 
+            position="top-center"
+            reverseOrder={false}
+            gutter={8}
+            containerClassName=""
+            containerStyle={{}}
+            toastOptions={{
+              duration: 2000,
+              style: {
+                background: 'white',
+                color: '#363636',
+                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                borderRadius: '8px',
+                padding: '12px 24px',
+              },
+            }}
+          />
         </Provider>
       
     </StrictMode>

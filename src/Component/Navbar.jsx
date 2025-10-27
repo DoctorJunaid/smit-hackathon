@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { ShoppingCart, Menu, X, LogOut, LogIn, Home, Store, Info, MessageCircle } from 'lucide-react';
 import { logout } from '@/Redux/UserSlice';
 import { clearCart } from '@/Redux/CartSlice';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import { gsap } from 'gsap';
 
 
