@@ -56,31 +56,19 @@ const renderApp = async () => {
         <Provider store={store}>
       <BrowserRouter>
           <App />
-          </BrowserRouter><ToastContainer
-            position="top-center"
-            autoClose={2000}
-            newestOnTop={true}
-            closeOnClick
-            draggable
-            theme="light"
-            style={{
-              position: 'fixed',
-              top: '1rem',
-              left: '50%',
-              transform: 'translateX(-50%)',
-              zIndex: 99999,
-              pointerEvents: 'none',
-              willChange: 'auto'
-            }}
-            toastStyle={{
-              pointerEvents: 'auto',
-              transform: 'none',
-              willChange: 'auto'
-            }}
-            bodyStyle={{
-              willChange: 'auto'
-            }}
-          />
+          </BrowserRouter>
+          <ToastContainer
+        position="top-center" 
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
         </Provider>
       
     </StrictMode>
